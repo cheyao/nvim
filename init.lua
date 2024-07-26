@@ -15,11 +15,14 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 vim.g.bigfile_size = 1024 * 1024 * 1.5
 vim.g.autoformat = true
 
+vim.opt.termguicolors = true
 vim.opt.clipboard = vim.env.SSH_TTY and "" or "unnamedplus"
 vim.opt.fillchars = {
   foldopen = "",
@@ -78,9 +81,6 @@ map("n", "<S-h>", "<cmd>bprevious<cr>", { desc = "Prev Buffer" })
 map("n", "<S-l>", "<cmd>bnext<cr>", { desc = "Next Buffer" })
 map("n", "[b", "<cmd>bprevious<cr>", { desc = "Prev Buffer" })
 map("n", "]b", "<cmd>bnext<cr>", { desc = "Next Buffer" })
-map("n", "<leader>bb", "<cmd>e #<cr>", { desc = "Switch to Other Buffer" })
-map("n", "<leader>`", "<cmd>e #<cr>", { desc = "Switch to Other Buffer" })
-map("n", "<leader>bb", "<cmd>:bd<cr>", { desc = "Delete Buffer and Window" })
 
 map("n", "n", "'Nn'[v:searchforward].'zv'", { expr = true, desc = "Next Search Result" })
 map("x", "n", "'Nn'[v:searchforward]", { expr = true, desc = "Next Search Result" })
@@ -102,8 +102,6 @@ vim.keymap.set("n", "[t", function()
   require("todo-comments").jump_prev()
 end, { desc = "Previous todo comment" })
 
-map("n", "<leader>ss", "<cmd>:ClangdSwitchSourceHeader<cr>", { desc = "Switch source header" })
-
 vim.filetype.add({
   pattern = {
     [".*"] = {
@@ -122,12 +120,16 @@ vim.filetype.add({
 -- Setup lazy.nvim
 require("lazy").setup({
   spec = {
+	    { "nvim-tree/nvim-tree.lua", lazy = false, dependencies = { "nvim-tree/nvim-web-devicons" }, config = function() require("nvim-tree").setup {} end },
 	    { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
 	    { "neovim/nvim-lspconfig" },
-	    { "hrsh7th/nvim-cmp" },
 	    { "hrsh7th/cmp-nvim-lsp" },
+	    { "hrsh7th/cmp-buffer" },
+	    { "hrsh7th/cmp-cmdline" },
+	    { "hrsh7th/nvim-cmp", dependencies = { "saadparwaiz1/cmp_luasnip", "L3MON4D3/LuaSnip" } },
+	    { "L3MON4D3/LuaSnip", dependencies = { "rafamadriz/friendly-snippets" } },
 	    { "saadparwaiz1/cmp_luasnip" },
-	    { "L3MON4D3/LuaSnip" },
+	    { "p00f/clangd_extensions.nvim" },
 	    { "nvim-lualine/lualine.nvim", dependencies = { "nvim-tree/nvim-web-devicons" } },
 	    { "nvim-telescope/telescope.nvim", branch = "0.1.x", dependencies = { "nvim-lua/plenary.nvim", "nvim-tree/nvim-web-devicons"} },
 	    { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
@@ -136,35 +138,42 @@ require("lazy").setup({
 	    { "folke/which-key.nvim", event = "VeryLazy", opts = {}, dependencies = { "echasnovski/mini.icons" } }
     },
     install = { colorscheme = { "habamax" } },
-    checker = { enabled = true },
+    checker = { enabled = false },
 })
 
--- Add additional capabilities supported by nvim-cmp
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
-
 local lspconfig = require('lspconfig')
 
--- require("lspconfig").clangd.setup({ cmd = {"/usr/local/opt/llvm/bin/clangd"} })
-local servers = { 'clangd' } -- , 'rust_analyzer', 'pyright', 'tsserver' }
-for _, lsp in ipairs(servers) do
-  lspconfig[lsp].setup {
-    capabilities = capabilities,
-  }
-end
+require("lspconfig").clangd.setup({
+        cmd = {
+          "clangd",
+          "--background-index",
+          "--clang-tidy",
+          "--header-insertion=iwyu",
+          "--completion-style=detailed",
+          "--function-arg-placeholders",
+          "--fallback-style=llvm",
+        },
+        init_options = {
+          usePlaceholders = true,
+          completeUnimported = true,
+          clangdFileStatus = true,
+        },
+        capabilities = capabilities
+      })
 
-local luasnip = require 'luasnip'
-
--- nvim-cmp setup
-local cmp = require 'cmp'
-cmp.setup {
+local luasnip = require('luasnip');
+-- luasnip.setup();
+local cmp = require("cmp")
+cmp.setup ({
   snippet = {
     expand = function(args)
-      luasnip.lsp_expand(args.body)
+	luasnip.lsp_expand(args.body)
     end,
   },
   mapping = cmp.mapping.preset.insert({
-    ['<C-u>'] = cmp.mapping.scroll_docs(-4), -- Up
-    ['<C-d>'] = cmp.mapping.scroll_docs(4), -- Down
+    ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+    ['<C-f>'] = cmp.mapping.scroll_docs(4),
     -- C-b (back) C-f (forward) for snippet placeholder navigation.
     ['<C-Space>'] = cmp.mapping.complete(),
     ['<CR>'] = cmp.mapping.confirm {
@@ -190,21 +199,38 @@ cmp.setup {
       end
     end, { 'i', 's' }),
   }),
-  sources = {
-    { name = 'nvim_lsp' },
-    { name = 'luasnip' },
-  },
+  sources = cmp.config.sources({
+      { name = 'nvim_lsp' },
+      { name = 'luasnip' },
+  }, {
+      { name = 'buffer' },
+  }),
   window = {
-    completion = cmp.config.window.bordered(),  
+    completion = cmp.config.window.bordered(),
+    documentation = cmp.config.window.bordered(),
   },
-}
+})
+
+cmp.setup.cmdline({ '/', '?' }, {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = {
+      { name = 'buffer' }
+    }
+})
 
 
 require("catppuccin").setup({ flavour = "macchiato" })
 require("lualine").setup()
 require("todo-comments").setup()
-require("barbar").setup()
+require("barbar").setup({
+	sidebar_filetypes = {
+		NvimTree = true,
+	},
+})
+require("clangd_extensions").setup()
 
+-- require("luasnip.loaders.from_snipmate").lazy_load()
+require("luasnip.loaders.from_vscode").lazy_load({ include = { "c", "cpp", "glsl", "python" } })
 
 require("nvim-treesitter.configs").setup({
 	ensure_installed = { "c", "lua", "vim", "vimdoc", "cpp", "glsl", "python" },
@@ -224,7 +250,40 @@ map("n", "<leader>ff", builtin.git_files, { desc = "Find files" })
 map("n", "<leader>fa", builtin.find_files, { desc = "Find all files" })
 map("n", "<leader>fw", builtin.live_grep, { desc = "Find grep" })
 map("n", "<leader>fb", builtin.buffers, { desc = "Find buffers" })
-map("n", "<leader>ft", "<cmd>:TodoTelescope<cr>", { desc = "Find todos" })
+map("n", "<leader>ft", "<Cmd>TodoTelescope<cr>", { desc = "Find todos" })
 
--- map(";", ":", builtin.buffers, {})
+-- " Move to previous/next
+map("n", "<A-,>", "<Cmd>BufferPrevious<CR>");
+map("n", "<A-.>", "<Cmd>BufferNext<CR>");
+
+map("n", "<S-Tab>", "<Cmd>BufferPrevious<CR>");
+map("n", "<Tab>", "<Cmd>BufferNext<CR>");
+
+-- " Re-order to previous/next
+map("n", "<A-<>", "<Cmd>BufferMovePrevious<CR>");
+map("n", "<A->>", "<Cmd>BufferMoveNext<CR>");
+
+-- " Goto buffer in position...
+map("n", "<A-1>", "<Cmd>BufferGoto 1<CR>");
+map("n", "<A-2>", "<Cmd>BufferGoto 2<CR>");
+map("n", "<A-3>", "<Cmd>BufferGoto 3<CR>");
+map("n", "<A-4>", "<Cmd>BufferGoto 4<CR>");
+map("n", "<A-5>", "<Cmd>BufferGoto 5<CR>");
+map("n", "<A-6>", "<Cmd>BufferGoto 6<CR>");
+map("n", "<A-7>", "<Cmd>BufferGoto 7<CR>");
+map("n", "<A-8>", "<Cmd>BufferGoto 8<CR>");
+map("n", "<A-9>", "<Cmd>BufferGoto 9<CR>");
+map("n", "<A-0>", "<Cmd>BufferLast<CR>");
+
+-- " Pin/unpin buffer
+map("n", "<A-p>", "<Cmd>BufferPin<CR>");
+
+-- " Close buffer
+map("n", "<A-w>", "<Cmd>BufferClose<CR>");
+map("n", "<A-x>", "<Cmd>BufferClose<CR>");
+map("n", "<leader>x", "<Cmd>BufferClose<CR>");
+-- " Restore buffer
+map("n", "<A-s-t>", "<Cmd>BufferRestore<CR>");
+
+map("n", "<A-n>", "<Cmd>NvimTreeOpen<CR>");
 
