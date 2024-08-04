@@ -16,5 +16,6 @@ o.relativenumber = true
 o.number = true
 o.foldmethod = 'expr'
 o.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+o.notcompatible = true
 
 -- o.cursorlineopt ='both' -- to enable cursorline!
