@@ -21,7 +21,7 @@ return {
   	"williamboman/mason.nvim",
   	opts = {
   		ensure_installed = {
-  			"clangd", "stylua", "clang-format"
+  			"clangd", "stylua", "clang-format", "pyright"
   		},
   	},
   }, {
