@@ -65,5 +65,7 @@ return {
     dependencies = { "nvim-lua/plenary.nvim" },
     lazy = false,
     opts = {},
-  }
+  },
+  { "wakatime/vim-wakatime", lazy = false },
+  { 'mfussenegger/nvim-jdtls' }
 }
