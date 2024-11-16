@@ -1,71 +1,77 @@
 return {
-  {
-    "stevearc/conform.nvim",
-    -- event = 'BufWritePre', -- uncomment for format on save
-    config = function()
-      require("configs.conform")
-    end,
-    opts = {
-      formatters_by_ft = {
-  	--	cpp = { "clang-format" },
-  	--	c = { "clang-format" },
-       }
-    }
-  }, {
-    "neovim/nvim-lspconfig",
-    config = function()
-      require("nvchad.configs.lspconfig").defaults()
-      require("configs.lspconfig")
-    end,
-  }, {
-  	"williamboman/mason.nvim",
-  	opts = {
-  		ensure_installed = {
-  			"clangd", "stylua", "clang-format", "pyright"
-  		},
-  	},
-  }, {
-  	"nvim-treesitter/nvim-treesitter",
-  	opts = {
-  		ensure_installed = {
-  			"vim", "lua", "vimdoc", "cpp", "c", "glsl", "python"
-  		},
+	{
+		"stevearc/conform.nvim",
+		config = function()
+			require("configs.conform")
+		end,
+	}, {
+	"neovim/nvim-lspconfig",
+	config = function()
+		require("nvchad.configs.lspconfig").defaults()
+		require("configs.lspconfig")
+	end,
+}, {
+	"williamboman/mason.nvim",
+	opts = {
+		ensure_installed = {
+			"clangd", "stylua", "clang-format", "pyright"
+		},
+	},
+}, {
+	"nvim-treesitter/nvim-treesitter",
+	opts = {
+		ensure_installed = {
+			"vim", "lua", "vimdoc", "cpp", "c", "glsl", "python"
+		},
 		highlight = {
 			enable = true,
 			disable = function(_, buf)
 				local max_filesize = 100 * 1024 -- 100 KB
 				local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
 				if ok and stats and stats.size > max_filesize then
-				    return true
+					return true
 				end
 			end,
 			additional_vim_regex_highlighting = false,
 		}
-  	},
-  }, {
-  	"hrsh7th/nvim-cmp",
-  	opts = function()
-  		local conf = require("nvchad.configs.cmp")
+	},
+}, {
+	"hrsh7th/nvim-cmp",
+	opts = function()
+		local conf = require("nvchad.configs.cmp")
 
-  		conf.window.completion = require("cmp").config.window.bordered();
-  		conf.window.documentation = require("cmp").config.window.bordered();
+		conf.window.completion = require("cmp").config.window.bordered();
+		conf.window.documentation = require("cmp").config.window.bordered();
 
-  		conf.mapping['<C-g>'] = function()
-  			if require("cmp").visible_docs() then
-  				require("cmp").close_docs()
-  			else
-  				require("cmp").open_docs()
-  			end
-  		end
+		conf.mapping['<C-g>'] = function()
+			if require("cmp").visible_docs() then
+				require("cmp").close_docs()
+			else
+				require("cmp").open_docs()
+			end
+		end
 
-  		return conf
-  	end,
-  }, {
-    "folke/todo-comments.nvim",
-    dependencies = { "nvim-lua/plenary.nvim" },
-    lazy = false,
-    opts = {},
-  },
-  { "wakatime/vim-wakatime", lazy = false },
-  { 'mfussenegger/nvim-jdtls' }
+		return conf
+	end,
+}, {
+	"folke/todo-comments.nvim",
+	dependencies = { "nvim-lua/plenary.nvim" },
+	lazy = false,
+	opts = {},
+}, {
+	"wakatime/vim-wakatime", lazy = false
+}, {
+	"OXY2DEV/markview.nvim",
+	lazy = false, -- Recommended
+	-- ft = "markdown" -- If you decide to lazy-load anyway
+
+	dependencies = {
+		"nvim-treesitter/nvim-treesitter",
+		"nvim-tree/nvim-web-devicons"
+	}
+}, {
+	'mrcjkb/rustaceanvim',
+	version = '^5', -- Recommended
+	lazy = false, -- This plugin is already lazy
+}
 }
