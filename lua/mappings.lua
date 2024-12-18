@@ -8,6 +8,7 @@ map("n", ";", ":", { desc = "CMD enter command mode" })
 map("i", "jk", "<ESC>")
 map("n", "<leader>ss", "<cmd>:ClangdSwitchSourceHeader<cr>", { desc = 'Switch source header'})
 map("n", "<leader>ft", "<cmd>:TodoTelescope<cr>", { desc = 'Find all todos'})
+map("n", "<leader>tt", "<cmd>:WakaTimeToday<cr>", { desc = 'Print today\'s wakatime'})
 
 map("n", "]t", function()
   require("todo-comments").jump_next()

@@ -16,3 +16,11 @@ lspconfig.pyright.setup {
   on_init = on_init,
   capabilities = capabilities,
 }
+
+
+lspconfig.arduino_language_server.setup {
+    cmd = {
+        "arduino-language-server",
+        "-fqbn",  "esp32:esp32:nodemcu-32s"
+    }
+}

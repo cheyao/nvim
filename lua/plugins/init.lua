@@ -59,7 +59,8 @@ return {
 	lazy = false,
 	opts = {},
 }, {
-	"wakatime/vim-wakatime", lazy = false
+	"wakatime/vim-wakatime",
+	lazy = false
 }, {
 	"OXY2DEV/markview.nvim",
 	lazy = false, -- Recommended
