@@ -61,18 +61,5 @@ return {
 }, {
 	"wakatime/vim-wakatime",
 	lazy = false
-}, {
-	"OXY2DEV/markview.nvim",
-	lazy = false, -- Recommended
-	-- ft = "markdown" -- If you decide to lazy-load anyway
-
-	dependencies = {
-		"nvim-treesitter/nvim-treesitter",
-		"nvim-tree/nvim-web-devicons"
-	}
-}, {
-	'mrcjkb/rustaceanvim',
-	version = '^5', -- Recommended
-	lazy = false, -- This plugin is already lazy
 }
 }
