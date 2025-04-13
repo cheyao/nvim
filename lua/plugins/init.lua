@@ -61,5 +61,8 @@ return {
 }, {
 	"wakatime/vim-wakatime",
 	lazy = false
+}, {
+	"mattn/emmet-vim",
+	lazy = false
 }
 }
