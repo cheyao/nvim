@@ -6,10 +6,10 @@ vim.opt.clipboard = vim.env.SSH_TTY and "" or "unnamedplus"
 
 local o = vim.o
 o.smarttab = true
-o.shiftwidth = 8
+o.shiftwidth = 4
 o.smoothscroll = true
-o.tabstop = 8
-o.expandtab = false
+o.tabstop = 4
+o.expandtab = true
 o.smartcase = true
 o.foldlevel = 99
 o.relativenumber = true

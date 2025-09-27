@@ -2,6 +2,9 @@ vim.g.base46_cache = vim.fn.stdpath "data" .. "/nvchad/base46/"
 vim.g.nvchad_theme = "catppuccin"
 vim.g.transparency = true
 vim.g.mapleader = " "
+vim.g.vimtex_view_method = "zathura"
+vim.g.vimtex_view_general_viewer = "okular"
+vim.g.vimtex_view_general_options = "--unique file:@pdf#src:@line@tex"
 
 vim.api.nvim_create_autocmd({ "UIEnter", "ColorScheme" }, {
   callback = function()
