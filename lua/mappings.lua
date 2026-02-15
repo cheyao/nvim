@@ -22,6 +22,4 @@ map("n", "K", function()
 	vim.lsp.buf.hover()
 end, { desc = "Show definition" })
 
-vim.api.nvim_create_user_command("Shrug", ":r ~/.config/nvim/lua/shrug.txt", {});
-
 -- map({ "n", "i", "v" }, "<C-s>", "<cmd> w <cr>")
