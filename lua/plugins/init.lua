@@ -14,7 +14,7 @@ return {
 	"williamboman/mason.nvim",
 	opts = {
 		ensure_installed = {
-			"clangd", "stylua", "clang-format", "pyright"
+			"clangd", "stylua", "clang-format"
 		},
 	},
 }, {
@@ -70,5 +70,9 @@ return {
   'mrcjkb/rustaceanvim',
   version = '^7', -- Recommended
   lazy = false, -- This plugin is already lazy
-}
+}, {
+  -- Setup happens in configs/server-settings/clangd.lua
+  "p00f/clangd_extensions.nvim",
+  lazy = true,
+},
 }
