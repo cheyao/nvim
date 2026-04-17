@@ -1,5 +1,3 @@
-require("nvchad.configs.lspconfig").defaults()
-
 vim.lsp.log.set_level(vim.log.levels.WARN)
 
 local servers = { "clangd", "pyright" }

@@ -1,5 +1,3 @@
-vim.g.base46_cache = vim.fn.stdpath "data" .. "/nvchad/base46/"
-vim.g.nvchad_theme = "catppuccin"
 vim.g.transparency = true
 vim.g.mapleader = " "
 
@@ -17,18 +15,8 @@ local lazy_config = require "configs.lazy"
 
 -- load plugins
 require("lazy").setup({
-  {
-    "NvChad/NvChad",
-    lazy = false,
-    branch = "v2.5",
-  },
-
   { import = "plugins" },
 }, lazy_config)
-
--- load theme
-dofile(vim.g.base46_cache .. "defaults")
-dofile(vim.g.base46_cache .. "statusline")
 
 require "options"
 require "autocmds"
@@ -37,29 +25,5 @@ vim.schedule(function()
   require "mappings"
 end)
 
-vim.api.nvim_create_autocmd("BufReadPost", {
-  pattern = "*",
-  callback = function()
-    local line = vim.fn.line "'\""
-    if
-      line > 1
-      and line <= vim.fn.line "$"
-      and vim.bo.filetype ~= "commit"
-      and vim.fn.index({ "xxd", "gitrebase" }, vim.bo.filetype) == -1
-    then
-      vim.cmd 'normal! g`"'
-    end
-  end,
-})
 
-vim.api.nvim_create_autocmd({ "UIEnter", "ColorScheme" }, {
-  callback = function()
-    local normal = vim.api.nvim_get_hl(0, { name = "Normal" })
-    if not normal.bg then return end
-    io.write(string.format("\027]11;#%06x\027\\", normal.bg))
-  end,
-})
-
-vim.api.nvim_create_autocmd("UILeave", {
-  callback = function() io.write("\027]111\027\\") end,
-})
+vim.cmd.colorscheme "catppuccin-nvim"
