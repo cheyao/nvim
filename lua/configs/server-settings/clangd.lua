@@ -1,6 +1,6 @@
 -- Prepare the capabilities (fix the utf-16 offset error)
-local clangd_capabilities = vim.deepcopy(capabilities)
-clangd_capabilities.offsetEncoding = { "utf-16" }
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities.offsetEncoding = { "utf-16" }
 
 return {
 	capabilities = clangd_capabilities,
@@ -8,7 +8,7 @@ return {
 	root_markers = {
 		"compile_commands.json",
 		"compile_flags.txt",
-		"configure.ac", -- AutoTools
+		"configure.ac",
 		"Makefile",
 		"configure.ac",
 		"configure.in",
@@ -22,7 +22,6 @@ return {
 	cmd = {
 		"clangd",
 		"--background-index",
-		-- "--background-index-threads=1", -- Limit background threads
 		"--clang-tidy",
 		"--header-insertion=iwyu",
 		"--completion-style=detailed",

@@ -68,3 +68,5 @@ create_cmd("TSInstallAll", function()
   require("nvim-treesitter").install(opts.ensure_installed)
 end, {})
 
+create_cmd("LspInfo", "checkhealth vim.lsp", {})
+
