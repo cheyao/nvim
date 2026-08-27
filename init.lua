@@ -27,3 +27,4 @@ end)
 
 
 vim.cmd.colorscheme "catppuccin-nvim"
+

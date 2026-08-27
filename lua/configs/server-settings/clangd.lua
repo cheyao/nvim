@@ -38,17 +38,14 @@ return {
 	},
 
 	on_attach = function(client, _)
-		-- 1. Disable built-in formatting (use conform instead)
 		client.server_capabilities.documentFormattingProvider = false
 		client.server_capabilities.documentRangeFormattingProvider = false
 
-		-- 2. Setup Clangd Extensions
 		require("clangd_extensions").setup({
 			inlay_hints = {
 				inline = false,
 			},
 			ast = {
-				-- Icons for the AST view
 				role_icons = {
 					type = "",
 					declaration = "",

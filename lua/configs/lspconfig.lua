@@ -1,11 +1,21 @@
 vim.lsp.log.set_level(vim.log.levels.WARN)
 
-local servers = { "clangd", "pyright" }
+local servers = { "pyright", "astro" }
 
 vim.lsp.config("verible", {
   cmd = {'verible-verilog-ls', '--rules_config_search'},
 })
 vim.lsp.enable("verible")
+
+local opts = {
+  cmd = {
+    'clangd',
+    '--clang-tidy',
+    '--clang-tidy-checks=-*',
+  },
+}
+vim.lsp.config("clangd", opts)
+vim.lsp.enable("clangd")
 
 for _, lsp in ipairs(servers) do
 	local opts = {}

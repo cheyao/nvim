@@ -86,7 +86,7 @@ return {
   },
   {
     "nvim-telescope/telescope.nvim",
-    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    dependencies = { "romus204/tree-sitter-manager.nvim" },
     cmd = "Telescope",
     opts = {
       defaults = {
@@ -171,10 +171,13 @@ return {
     opts = {
       animation = true,
     },
-    version = "^1.0.0", -- optional: only update when a new 1.x version is released
+    version = "^1.0.0",
   },
   {
-    "andweeb/presence.nvim",
-    lazy = false,
+    "wakatime/vim-wakatime",
+    lazy = false
+  },
+  {
+    "virchau13/tree-sitter-astro"
   },
 }

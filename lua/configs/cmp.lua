@@ -32,12 +32,12 @@ local options = {
       end
     end, { "i", "s" }),
 
-    ['<C-g>'] = cmp.mapping(function(fallback)
-        if require("cmp").visible_docs() then
-            require("cmp").close_docs()
-        else
-            require("cmp").open_docs()
-        end
+    ["<C-g>"] = cmp.mapping(function(fallback)
+      if require("cmp").visible_docs() then
+        require("cmp").close_docs()
+      else
+        require("cmp").open_docs()
+      end
     end, { "n", "i", "s" }),
 
     ["<S-Tab>"] = cmp.mapping(function(fallback)
@@ -61,6 +61,19 @@ local options = {
   window = {
     completion = cmp.config.window.bordered(),
     documentation = cmp.config.window.bordered(),
+  },
+
+  sorting = {
+    comparators = {
+      cmp.config.compare.offset,
+      cmp.config.compare.exact,
+      cmp.config.compare.recently_used,
+      require "clangd_extensions.cmp_scores",
+      cmp.config.compare.kind,
+      cmp.config.compare.sort_text,
+      cmp.config.compare.length,
+      cmp.config.compare.order,
+    },
   },
 }
 

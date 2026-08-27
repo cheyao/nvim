@@ -38,7 +38,13 @@ map("n", "<Esc>", "<cmd>noh<CR>", { desc = "general clear highlights" })
 map("n", "<C-s>", "<cmd>w<CR>", { desc = "general save file" })
 
 map({ "n", "x" }, "<leader>fm", function()
-  require("conform").format { lsp_fallback = true }
+  require("conform").format({ lsp_format = "never", lsp_fallback = false }, function(err, did_edit)
+      if not did_edit then
+          if err != nil then
+              print(err)
+          end
+      end
+  end)
 end, { desc = "general format file" })
 
 map("n", "<leader>ds", vim.diagnostic.setloclist, { desc = "LSP diagnostic loclist" })

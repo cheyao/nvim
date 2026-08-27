@@ -10,7 +10,7 @@ o.clipboard = "unnamedplus"
 o.cursorline = true
 o.cursorlineopt = "number"
 
-o.expandtab = true
+o.expandtab = false
 o.shiftwidth = 2
 o.smartindent = true
 o.tabstop = 2
